@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0f131b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="100game">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>100game</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preload" href="fonts/roboto-mono-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <main id="title" class="screen title">
+    <div class="title-inner">
+      <h1 class="logo">100game</h1>
+
+      <ul class="levels">
+        <li>
+          <button class="level" type="button" data-difficulty="easy">
+            <span class="level-name">easy</span>
+            <span class="level-best" data-best="easy">--:--.--</span>
+          </button>
+        </li>
+        <li>
+          <button class="level" type="button" data-difficulty="normal">
+            <span class="level-name">normal</span>
+            <span class="level-best" data-best="normal">--:--.--</span>
+          </button>
+        </li>
+        <li>
+          <button class="level" type="button" data-difficulty="hard">
+            <span class="level-name">hard</span>
+            <span class="level-best" data-best="hard">--:--.--</span>
+          </button>
+        </li>
+        <li>
+          <button class="level" type="button" data-difficulty="maniac">
+            <span class="level-name">maniac</span>
+            <span class="level-best" data-best="maniac">--:--.--</span>
+          </button>
+        </li>
+      </ul>
+
+      <button class="icon-btn mute" type="button" data-mute aria-label="音を消す" aria-pressed="false">
+        <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
+        <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none"/></svg>
+        <span class="mute-label">効果音</span>
+      </button>
+    </div>
+  </main>
+
+  <div id="game" class="screen game" hidden>
+    <header class="hud">
+      <div class="hud-next">
+        <span class="hud-label">NEXT</span>
+        <span id="hud-next" class="hud-next-num">1</span>
+      </div>
+      <div class="hud-center">
+        <span id="hud-time" class="hud-time">00:00.00</span>
+        <span class="hud-sub"><span id="hud-difficulty">easy</span> · ミス <span id="hud-misses">0</span></span>
+      </div>
+      <div class="hud-actions">
+        <button class="icon-btn" type="button" data-mute aria-label="音を消す" aria-pressed="false">
+          <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
+          <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none"/></svg>
+        </button>
+        <button id="hud-pause" class="icon-btn" type="button" aria-label="一時停止">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <canvas id="board"></canvas>
+
+      <div id="countdown" class="overlay" hidden>
+        <span id="countdown-num" class="countdown-num">3</span>
+      </div>
+
+      <div id="pause" class="overlay" hidden>
+        <div class="panel">
+          <h2>一時停止</h2>
+          <div class="panel-actions">
+            <button id="resume" class="btn primary" type="button">再開</button>
+            <button id="quit" class="btn" type="button">やめる</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="result" class="overlay" hidden>
+        <div class="panel">
+          <h2>クリア</h2>
+          <p class="result-difficulty" id="result-difficulty">easy</p>
+          <p class="result-time" id="result-time">00:00.00</p>
+          <p class="result-misses">ミス <span id="result-misses">0</span> 回</p>
+          <p class="result-best" id="result-best"></p>
+          <div class="panel-actions">
+            <button id="retry" class="btn primary" type="button">もう一度</button>
+            <button id="to-title" class="btn" type="button">タイトルへ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
