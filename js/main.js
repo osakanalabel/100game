@@ -167,7 +167,7 @@ function onPointerDown(e) {
   switch (result.type) {
     case 'correct':
     case 'clear': {
-      sound.correct(result.number);
+      sound.correct(result.number, game.count);
       effects.push(effect.ripple(p.x, p.y, now));
       if (game.rules.vanish) {
         const color = game.rules.gray ? GRAY_COLOR.fill : BALL_COLORS[result.ball.color].fill;

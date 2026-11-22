@@ -1,7 +1,7 @@
 // ゲームの状態と難易度ルール。DOM に触らない。
 // 時刻 t は「一時停止を除いた経過時間（ミリ秒）」を受け取る。
 
-import { PAIRS, DIFFICULTY_RULES, BALL_COUNT, MISS_LOCK_MS } from './config.js';
+import { PAIRS, DIFFICULTY_RULES, MISS_LOCK_MS } from './config.js';
 import { createBoard } from './packing.js';
 import { findHit } from './hit.js';
 
@@ -27,7 +27,8 @@ export function createGame(difficulty, rng) {
   return {
     difficulty,
     rules,
-    balls: createBoard(rng),
+    count: rules.board.count,
+    balls: createBoard(rng, rules.board),
     next: 1,
     misses: 0,
     lockedUntil: -Infinity,
@@ -41,7 +42,7 @@ export function createGame(difficulty, rng) {
  * - locked：ミス後の停止中（ミスに数えない）
  * - miss：違うボールを押した
  * - correct：正解（number はその番の番号）
- * - clear：100番に正解した
+ * - clear：最後の番号（100、practice は20）に正解した
  */
 export function tap(game, x, y, t, rng) {
   if (game.cleared) return { type: 'ignored' };
@@ -60,10 +61,10 @@ export function tap(game, x, y, t, rng) {
   if (game.rules.vanish) game.balls = game.balls.filter((b) => b !== ball);
   game.next += 1;
 
-  if (game.next > BALL_COUNT) {
+  if (game.next > game.count) {
     game.cleared = true;
     return { type: 'clear', ball, number };
   }
-  if (game.rules.reshuffle) game.balls = createBoard(rng);
+  if (game.rules.reshuffle) game.balls = createBoard(rng, game.rules.board);
   return { type: 'correct', ball, number };
 }

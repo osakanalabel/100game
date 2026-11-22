@@ -38,14 +38,27 @@ export const PAIRS = [
   [86, 98],
 ];
 
-/** 難易度（積み重ね式） */
-export const DIFFICULTIES = ['easy', 'normal', 'hard', 'maniac'];
+/** practice のボール（20個で、100個のときと同じくらい盤面が埋まる大きさ） */
+export const PRACTICE_COUNT = 20;
+export const PRACTICE_DIAMETER_MIN = 67;
+export const PRACTICE_DIAMETER_MAX = 107;
+
+/** 難易度。並びはタイトル画面の表示順。easy〜maniac は積み重ね式 */
+export const DIFFICULTIES = ['practice', 'easy', 'normal', 'hard', 'maniac'];
+
+const FULL_BOARD = { count: BALL_COUNT, dMin: DIAMETER_MIN, dMax: DIAMETER_MAX };
 
 export const DIFFICULTY_RULES = {
-  easy: { vanish: true, gray: false, reshuffle: false },
-  normal: { vanish: false, gray: false, reshuffle: false },
-  hard: { vanish: false, gray: true, reshuffle: false },
-  maniac: { vanish: false, gray: true, reshuffle: true },
+  practice: {
+    vanish: true,
+    gray: false,
+    reshuffle: false,
+    board: { count: PRACTICE_COUNT, dMin: PRACTICE_DIAMETER_MIN, dMax: PRACTICE_DIAMETER_MAX },
+  },
+  easy: { vanish: true, gray: false, reshuffle: false, board: FULL_BOARD },
+  normal: { vanish: false, gray: false, reshuffle: false, board: FULL_BOARD },
+  hard: { vanish: false, gray: true, reshuffle: false, board: FULL_BOARD },
+  maniac: { vanish: false, gray: true, reshuffle: true, board: FULL_BOARD },
 };
 
 /** ボールの色と、その上に載せる番号の文字色 */

@@ -10,6 +10,7 @@ import {
   BALL_GAP,
   BALL_COUNT,
   BALL_COLORS,
+  DIFFICULTY_RULES,
 } from '../js/config.js';
 
 const EPS = 1e-9;
@@ -34,6 +35,30 @@ test('盤面：100個すべてが盤面に収まり、重ならず、直径が�
         const b = balls[j];
         const dist = Math.hypot(a.x - b.x, a.y - b.y);
         assert.ok(dist + EPS >= a.r + b.r + BALL_GAP, `重なり seed=${seed}`);
+      }
+    }
+  }
+});
+
+test('盤面（practice）：20個すべてが盤面に収まり、重ならず、直径が 67〜107', () => {
+  const { count, dMin, dMax } = DIFFICULTY_RULES.practice.board;
+  assert.deepEqual([count, dMin, dMax], [20, 67, 107]);
+  for (let seed = 1; seed <= 50; seed++) {
+    const balls = createBoard(seededRandom(seed), DIFFICULTY_RULES.practice.board);
+    assert.equal(balls.length, 20);
+    assert.deepEqual(
+      balls.map((b) => b.n).sort((a, b) => a - b),
+      Array.from({ length: 20 }, (_, i) => i + 1),
+    );
+    for (const b of balls) {
+      assert.ok(b.x - b.r >= -EPS && b.x + b.r <= FIELD_W + EPS, `横にはみ出し seed=${seed}`);
+      assert.ok(b.y - b.r >= -EPS && b.y + b.r <= FIELD_H + EPS, `縦にはみ出し seed=${seed}`);
+      assert.ok(b.r * 2 >= dMin - EPS && b.r * 2 <= dMax + EPS, `直径 ${b.r * 2} seed=${seed}`);
+    }
+    for (let i = 0; i < balls.length; i++) {
+      for (let j = i + 1; j < balls.length; j++) {
+        const dist = Math.hypot(balls[i].x - balls[j].x, balls[i].y - balls[j].y);
+        assert.ok(dist + EPS >= balls[i].r + balls[j].r + BALL_GAP, `重なり seed=${seed}`);
       }
     }
   }

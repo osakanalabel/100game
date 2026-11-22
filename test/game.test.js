@@ -35,7 +35,7 @@ test('組：4組は互いに正解、それ以外は入れ替わらない', () =
 });
 
 for (const difficulty of DIFFICULTIES) {
-  test(`${difficulty}：1から100まで押すとクリアする`, () => {
+  test(`${difficulty}：1から最後の番号まで押すとクリアする`, () => {
     const rng = seededRandom(3);
     const game = createGame(difficulty, rng);
     let last;
@@ -46,10 +46,43 @@ for (const difficulty of DIFFICULTIES) {
       assert.notEqual(last.type, 'miss');
     }
     assert.equal(last.type, 'clear');
-    assert.equal(last.number, BALL_COUNT);
+    assert.equal(last.number, game.count);
     assert.equal(game.misses, 0);
   });
 }
+
+test('practice：ボールは1〜20の20個で、20番でクリアする', () => {
+  const rng = seededRandom(41);
+  const game = createGame('practice', rng);
+  assert.equal(game.count, 20);
+  assert.deepEqual(
+    game.balls.map((b) => b.n).sort((a, b) => a - b),
+    Array.from({ length: 20 }, (_, i) => i + 1),
+  );
+  const t = advanceTo(game, 20, rng);
+  assert.equal(game.balls.length, 1);
+  assert.equal(tapNumber(game, 20, t + 1000).type, 'clear');
+});
+
+test('practice：easy と同じく、正解したボールが消え、色付き', () => {
+  const rng = seededRandom(42);
+  const game = createGame('practice', rng);
+  assert.equal(game.rules.vanish, true);
+  assert.equal(game.rules.gray, false);
+  assert.equal(game.rules.reshuffle, false);
+  tapNumber(game, 1, 1000);
+  assert.equal(game.balls.length, 19);
+});
+
+test('practice：6の番に「9」、9の番に残った「6」で進める', () => {
+  const rng = seededRandom(43);
+  const game = createGame('practice', rng);
+  let t = advanceTo(game, 6, rng);
+  assert.equal(tapNumber(game, 9, (t += 1000)).type, 'correct');
+  t = advanceTo(game, 9, rng);
+  assert.equal(tapNumber(game, 6, (t += 1000)).type, 'correct');
+  assert.equal(game.next, 10);
+});
 
 test('組（normal）：6番で「9」を押し、9番でも同じ「9」を押してよい', () => {
   const rng = seededRandom(5);
